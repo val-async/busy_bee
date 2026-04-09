@@ -6,7 +6,7 @@
 Busy Bee is a task-management web application designed to help users track high-level goals by breaking them into manageable, time-sensitive "Mini Tasks." Built with Django, HTMX, and Tailwind CSS, it focuses on speed and "quick wins" to maintain productivity momentum.
 
 ✨ Key Features
-&nbsp;&nbsp;&nbsp;&nbsp; 🎯 Goal Decomposition: Break large tasks into smaller "Mini Tasks" to reduce overwhelm.
+🎯 Goal Decomposition: Break large tasks into smaller "Mini Tasks" to reduce overwhelm.
 ⏱️ Precise Deadlines: Real-time validation prevents past-dated tasks and tracks exact minute-by-minute completion.
 ⚡ Reactive UI: Powered by HTMX for a smooth, single-page experience without full page reloads.
 📊 Productivity Insights: Track your "was on time" percentage and view detailed completion logs.
