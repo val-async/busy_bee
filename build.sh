@@ -5,4 +5,4 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --no-input
 
-python manage.py migrate
+PYTHONPATH=busy_bee_project python busy_bee_project/manage.py migrate
