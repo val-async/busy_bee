@@ -1,0 +1,93 @@
+{% extends "busy/layout.html" %}
+
+{% block title %} Join the Hive | Register {% endblock title %}
+
+{% block content %}
+{% comment %} Register Card - High Energy Design {% endcomment %}
+<div class="max-w-md mx-auto mt-12 px-4 pb-20">
+    <div class="card bg-white shadow-2xl border border-amber-100 overflow-hidden">
+        
+        {% comment %} Branding Header {% endcomment %}
+        <div class="bg-amber-400 p-8 text-center relative">
+            <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                <span class="text-xl">🐝</span>
+            </div>
+            <h2 class="text-2xl font-black text-white tracking-tight uppercase">New Worker Bee</h2>
+            <p class="text-amber-900/60 font-bold text-[10px] tracking-widest mt-1">Start your productivity journey</p>
+        </div>
+
+        <div class="card-body p-8 pt-12">
+            
+            {% if form.errors %}
+                <div class="alert alert-error text-xs font-bold mb-6 rounded-xl flex flex-col items-start gap-1">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>• {{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p>• {{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="post" class="space-y-4">
+                {% csrf_token %}
+                
+                {% comment %} 
+                    Manually looping to ensure the DaisyUI structure 
+                    is maintained for every field in UserCreationForm 
+                {% endcomment %}
+                {% for field in form %}
+                    <div class="form-control w-full">
+                        <label class="label pb-1">
+                            <span class="label-text font-black text-slate-500 uppercase text-[10px] tracking-widest">
+                                {{ field.label }}
+                            </span>
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <label class="label">
+                                <span class="label-text-alt text-[9px] text-slate-400 leading-tight">
+                                    {{ field.help_text|striptags }}
+                                </span>
+                            </label>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="pt-6">
+                    <button type="submit" class="btn btn-warning btn-block text-white font-black shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                        Sign Up
+                    </button>
+                </div>
+
+                <div class="text-center mt-6">
+                    <p class="text-xs text-slate-400">
+                        Already Beesy? {% comment "" %}Already in the swarm? {% endcomment %}
+                        <a href="{% url 'login' %}" class="text-amber-600 font-bold hover:underline">Login instead</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    {% comment %} Keeping inputs consistent with Login and Update Profile {% endcomment %}
+    input[type="text"], input[type="password"], input[type="email"] {
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 0.75rem !important;
+        border: 2px solid #f1f5f9 !important; 
+        background-color: #f8fafc !important; 
+        transition: all 0.2s !important;
+    }
+    input:focus {
+        outline: none !important;
+        border-color: #fbbf24 !important; 
+        background-color: #fff !important;
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1) !important;
+    }
+</style>
+{% endblock content %}

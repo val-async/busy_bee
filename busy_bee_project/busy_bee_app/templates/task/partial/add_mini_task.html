@@ -1,0 +1,58 @@
+{% comment %} Styled Add Mini Task Partial {% endcomment %}
+<div class="bg-amber-50 p-4 rounded-xl border border-amber-200 mt-2 animate-in fade-in slide-in-from-top-1 duration-300">
+    <form hx-post="{% url 'add_mini_task' task.id %}" 
+          hx-target="#htmx_task_container_{{task.id}}"
+          class="space-y-4">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 gap-3">
+            {% for field in form %}
+                <div class="form-control w-full">
+                    <label class="label py-1">
+                        <span class="label-text text-[10px] font-black uppercase text-amber-700 tracking-wider">
+                            {{ field.label }}
+                        </span>
+                    </label>
+                    <div class="mini-input-wrapper">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if form.mini_task_deadline.errors %}
+                <div class="alert mb-4 shadow-lg">{{ form.mini_task_deadline.errors }}</div>
+                
+                {% endif %}
+
+        <div class="flex items-center gap-3 pt-2">
+            <button type="submit" class="btn btn-warning btn-sm px-6 text-white font-bold shadow-sm">
+                Add
+            </button>
+            {% comment %} Cancel button just reloads the view_tasks state or hides the container {% endcomment %}
+            <a href="{% url 'view_tasks' %}" 
+               class="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    {% comment %} Inline styles to ensure Django's widgets don't break the small partial layout {% endcomment %}
+    .mini-input-wrapper input, 
+    .mini-input-wrapper select, 
+    .mini-input-wrapper textarea {
+        width: 100% !important;
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.875rem !important;
+        border-radius: 0.5rem !important;
+        border: 1px solid #fde68a !important; 
+        background-color: #ffffff !important;
+    }
+    .mini-input-wrapper input:focus {
+        outline: none !important;
+        border-color: #fbbf24 !important; 
+        box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.1) !important;
+    }
+</style>
+

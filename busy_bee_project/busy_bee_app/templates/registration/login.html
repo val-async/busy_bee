@@ -1,0 +1,77 @@
+{% extends "busy/layout.html" %}
+
+{% block title %} Login | Busy Bee {% endblock title %}
+
+{% block content %}
+{% comment %} Centered Login Card {% endcomment %}
+<div class="max-w-md mx-auto mt-16 px-4 pb-20">
+    <div class="card bg-white shadow-2xl border border-amber-100 overflow-hidden">
+        
+        {% comment %} Branding Header {% endcomment %}
+        <div class="bg-slate-800 p-8 text-center relative">
+            <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-xl">🔑</span>
+            </div>
+            <h2 class="text-2xl font-black text-white tracking-tight uppercase">Welcome Back</h2>
+            <p class="text-amber-400 font-bold text-[10px] tracking-widest mt-1">Identify yourself, worker bee</p>
+        </div>
+
+        <div class="card-body p-8 pt-12">
+            
+            {% if form.errors %}
+                <div class="alert alert-error text-xs font-bold mb-4 py-2 rounded-lg">
+                    <span>Invalid credentials. Please try again.</span>
+                </div>
+            {% endif %}
+
+            <form action="" method="post" class="space-y-5">
+                {% csrf_token %}
+                
+                {% comment %} Loop through login fields (Username & Password) {% endcomment %}
+                {% for field in form %}
+                    <div class="form-control w-full">
+                        <label class="label pb-1">
+                            <span class="label-text font-black text-slate-500 uppercase text-[10px] tracking-widest">
+                                {{ field.label }}
+                            </span>
+                        </label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div class="pt-4">
+                    <button type="submit" class="btn btn-warning btn-block text-white font-black shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                        Enter the Hive
+                    </a>
+                </div>
+
+                <div class="text-center mt-6">
+                    <p class="text-xs text-slate-400">
+                        New to the swarm? 
+                        <a href="{% url 'register' %}" class="text-amber-600 font-bold hover:underline">Sign up here</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    {% comment %} Keeping inputs consistent with your Update Profile page {% endcomment %}
+    input[type="text"], input[type="password"], input[type="text"] {
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 0.75rem !important;
+        border: 2px solid #f1f5f9 !important; 
+        background-color: #f8fafc !important; 
+        transition: all 0.2s !important;
+    }
+    input:focus {
+        outline: none !important;
+        border-color: #fbbf24 !important; 
+        background-color: #fff !important;
+    }
+</style>
+{% endblock content %}

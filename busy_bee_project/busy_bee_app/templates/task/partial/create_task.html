@@ -1,0 +1,59 @@
+{% comment %} Compact Mobile-First Create Task Partial {% endcomment %}
+<div class="bg-white p-4 rounded-2xl border-2 border-amber-400 shadow-lg mb-6 animate-in slide-in-from-top-2 duration-200">
+    <div class="flex items-center gap-3 mb-4">
+        <div class="w-8 h-8 bg-amber-400 rounded-lg flex items-center justify-center shadow-sm">
+            <span class="text-sm">✍️</span>
+        </div>
+        <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">New Task</h3>
+    </div>
+    
+    <form hx-post="{% url 'create_task' %}" hx-target="#htmx-create-task" class="space-y-3">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-control w-full">
+                <label class="label py-0.5">
+                    <span class="text-[9px] font-black uppercase text-slate-400 tracking-widest">
+                        {{ field.label }}
+                    </span>
+                </label>
+                <div class="mobile-input-wrapper">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+         {% if form.task_deadline.errors %}
+        <div class="alert mb-4 shadow-lg">{{ form.task_deadline.errors }}</div>
+        
+        {% endif %}
+
+        <div class="flex items-center justify-between pt-2">
+            <a href="{% url 'view_tasks' %}" 
+               class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">
+                Cancel
+            </a>
+            <button type="submit" class="btn btn-warning btn-sm px-6 text-white font-black shadow-md">
+                Launch
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    {% comment %} Slimmer inputs for mobile thumb-friendly use {% endcomment %}
+    .mobile-input-wrapper input, 
+    .mobile-input-wrapper select, 
+    .mobile-input-wrapper textarea {
+        width: 100% !important;
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.875rem !important;
+        border-radius: 0.75rem !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #f8fafc !important;
+    }
+    .mobile-input-wrapper input:focus {
+        border-color: #fbbf24 !important;
+        background-color: #ffffff !important;
+    }
+</style>

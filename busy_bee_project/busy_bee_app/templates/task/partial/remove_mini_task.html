@@ -1,0 +1,27 @@
+{% comment %} Styled Remove Mini Task Confirmation Partial {% endcomment %}
+<div class="bg-red-50 p-4 rounded-xl border border-red-100 mt-2 animate-in zoom-in-95 duration-200">
+    <form hx-post="{% url 'remove_mini_task' mini_task.id %}" 
+          hx-target="#htmx_mini_task_container{{mini_task.id}}"
+          class="flex flex-col items-center text-center gap-3">
+        {% csrf_token %}
+        
+        <div class="flex items-center gap-2 text-red-700">
+            <span class="text-lg">⚠️</span>
+            <p class="text-xs font-black uppercase tracking-widest">
+                Delete sub-task?
+            </p>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button type="submit" class="btn btn-error btn-xs px-4 text-white font-bold shadow-sm">
+                Confirm Delete
+            </button>
+            
+            {% comment %} Cancel just refreshes the view so the form disappears {% endcomment %}
+            <a href="{% url 'view_tasks' %}" 
+               class="text-[10px] font-black text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-widest">
+                Keep it
+            </a>
+        </div>
+    </form>
+</div>

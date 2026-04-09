@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title  %} Layout {% endblock title  %}</title>
+    <script src="{% static "js/htmx.min.js" %}"></script>
+    <script src="{% static "js/messagehandling.js" %}"></script>
+    <link rel="stylesheet" href="{% static "styles/styles.css" %}">
+    <link rel="stylesheet" href="{% static "styles/output.css" %}">
+    
+    <style>
+        /* Subtle Hexagon Background Pattern */
+        .bg-hive {
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill='%23fef3c7' fill-opacity='0.4' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9l11-6.35 11 6.35V30.6l-11 6.35-11-6.35V17.9z'%3E%3C/path%3E%3C/svg%3E");
+        }
+    </style>
+  <style>
+    .toast-message {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%); /* Perfectly centers it regardless of screen width */
+        background: #1e293b; /* Deep Obsidian Slate */
+        color: #f8fafc;
+        padding: 12px 24px;
+        border-radius: 99px; /* Pill shape for a modern look */
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        border: 2px solid #fbbf24; /* Honeycomb Yellow Border */
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        min-width: 300px;
+        justify-content: space-between;
+    }
+
+    .toast-icon {
+        background: #fbbf24;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .toast-content {
+        font-weight: 700;
+        font-size: 0.875rem;
+        letter-spacing: 0.025em;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: #94a3b8; /* Slate-400 */
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+        transition: color 0.2s;
+        padding: 4px;
+    }
+
+    .close-btn:hover {
+        color: #f8fafc;
+    }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen bg-hive">
+
+    {% comment %} Sticky Navbar {% endcomment %}
+    <nav class="navbar bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-amber-200 px-4 lg:px-12">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-2xl font-black gap-1 normal-case tracking-tighter" href="{% url "home" %}">
+                <span class="text-amber-500" >
+                    BUSY</span>BEE
+                <div class="w-6 h-6 bg-amber-400 rounded-full flex items-center justify-center">
+                   <span class="text-[10px]">🐝</span>
+                </div>
+            </a>
+        </div>
+
+    
+            <div class="flex-none gap-2">
+                {% if user.is_authenticated %}
+                    {% comment %} profile dropdown {% endcomment %}
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar online">
+                            <div class="w-10 rounded-full ring ring-amber-400 ring-offset-base-100 ring-offset-2">
+                                {% comment %} Added a seed based on username so every user gets a unique bee-ish avatar {% endcomment %}
+                                <img alt="User profile" src="https://api.dicebear.com/9.x/adventurer/svg?flip=true&seed=Aidan" />
+                            </div>
+                        </div>
+                        <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 border border-amber-100">
+                            <li class="menu-title text-amber-600"><span>@{{ user.username }}</span></li>
+                            <li><a href="{% url 'profile' %}">Personal Hive</a></li>
+                            <li><a href="{% url 'update_profile' %}">Settings</a></li>
+                            <div class="divider my-0"></div> 
+                            <li class="text-error">
+                                {% comment %} Styled the form button to look like a standard menu item {% endcomment %}
+                                <form action="{% url 'logout' %}" method="post" class="w-full">
+                                    {% csrf_token %}
+                                    <button type="submit" class="w-full text-left">Fly Away (Logout)</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+
+                    <div class="flex gap-2 items-center">
+                        <a href="{% url 'login' %}" class="btn btn-ghost btn-sm normal-case">Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-warning btn-sm normal-case shadow-sm">Join the Hive</a>
+                    </div>
+                {% endif %}
+            </div>
+
+    </nav>
+
+       <div id="message_container">
+        {% if messages %}
+            <div id='messages_container_inner' class="toast-message">
+            {% for message in messages %}
+            <div >
+                    <span>{{message}}</span>
+                    <button class="close-btn" onclick="dismissMessage('messages_container_inner')"> X </button>
+            </div>
+            {% endfor %}    
+            </div>
+        {% endif %}
+     </div> 
+
+
+    <div class="main-container flex grow w-full">
+        {% block content  %} {% endblock content  %}
+    </div>
+
+
+{% comment %} Flat Sticky Footer {% endcomment %}
+<footer class="bg-white border-t border-amber-100 py-4 mt-auto">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        
+        {% comment %} Left: Brand {% endcomment %}
+        <div class="flex items-center gap-2">
+            <div class="w-6 h-6 bg-amber-400 rounded flex items-center justify-center shadow-sm">
+                <span class="text-[10px]">🐝</span>
+            </div>
+            <span class="text-xs font-black tracking-tighter text-slate-800 uppercase">BusyBee</span>
+        </div>
+
+        {% comment %} Center: Minimal Nav {% endcomment %}
+        <nav class="flex gap-6">
+            <a href="{% url 'home' %}" class="text-[10px] font-bold text-slate-400 hover:text-amber-500 uppercase tracking-widest transition-colors">Home</a>
+            <a href="{% url 'view_tasks' %}" class="text-[10px] font-bold text-slate-400 hover:text-amber-500 uppercase tracking-widest transition-colors">Workloads</a>
+            <a href="{% url 'profile' %}" class="text-[10px] font-bold text-slate-400 hover:text-amber-500 uppercase tracking-widest transition-colors">Archive</a>
+        </nav>
+
+        {% comment %} Right: Copyright {% endcomment %}
+        <div class="text-[10px] font-medium text-slate-400">
+            &copy; {% now "Y" %} <span class="hidden md:inline">• Made for worker bees</span>
+        </div>
+
+    </div>
+</footer>
+
+
+{% comment %} Final Copyright Line {% endcomment %}
+<div class="bg-slate-950 py-6 text-center border-t border-slate-800">
+    <p class="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-bold">
+        &copy; {% now "Y" %} Busy Bee Productivity • Built with 🍯
+    </p>
+</div>
+    
+</body>
+</html>

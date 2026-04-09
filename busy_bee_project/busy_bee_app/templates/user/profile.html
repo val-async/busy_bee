@@ -1,0 +1,172 @@
+{% extends "busy/layout.html" %}
+
+{% block title %} Personal Hive | {{ user.username }} {% endblock title %}
+
+{% block content %}
+{% comment %} Profile & Dashboard Header {% endcomment %}
+
+<div class="max-w-5xl mx-auto mt-8 px-4 pb-20">
+
+
+
+    <div class="flex flex-col md:flex-row gap-8 items-center md:items-end mb-12 bg-white p-8 rounded-3xl shadow-sm border border-amber-100">
+        {% comment %} Avatar Section {% endcomment %}
+        <div class="avatar online">
+            <div class="w-32 rounded-2xl ring ring-amber-400 ring-offset-base-100 ring-offset-4 shadow-xl">
+                <img src="https://api.dicebear.com/9.x/adventurer/svg?flip=true&seed=Aidan" alt="Bee Avatar" />
+            </div>
+        </div>
+
+        {% comment %} User Info {% endcomment %}
+        <div class="flex-1 text-center md:text-left">
+            <h1 class="text-4xl font-black text-slate-800 tracking-tight">@{{ user.username }}</h1>
+            <p class="text-slate-500 flex items-center justify-center md:justify-start gap-2 mt-2">
+                <span class="text-lg">🎂</span> Born: {{ profile.date_of_birth|date:"M d, Y" }}
+            </p>
+            <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+                <a href="{% url 'update_profile' %}" class="btn btn-sm btn-outline btn-warning normal-case">Edit Profile</a>
+                <div class="badge badge-lg bg-amber-400 border-none text-white font-bold p-4">Level {{profile.get_user_level}} Worker Bee</div>
+            </div>
+        </div>
+
+        {% comment %} Honey Stat Card {% endcomment %}
+        <div class="stats shadow-sm bg-amber-50 border border-amber-200">
+            <div class="stat px-8">
+                <div class="stat-title text-amber-700 font-bold uppercase text-[10px] tracking-widest text-center">Lifetime Honey</div>
+                <div class="stat-value text-amber-600 text-center">{{ total_completed_task_count }}</div>
+                <div class="stat-desc text-slate-400 text-center">Missions Completed</div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} Section Divider {% endcomment %}
+    <div class="divider mb-10">
+        <span class="bg-white px-6 py-2 rounded-full border border-amber-200 text-xs font-black uppercase tracking-[0.3em] text-amber-600 shadow-sm">
+            🐝 Beesy Logs
+        </span>
+    </div>
+
+
+        {% comment %} High-Impact Productivity Stat for Profile Hive {% endcomment %}
+{% if total_completed_task_count > 0 %}
+    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-3xl shadow-xl border-b-4 border-amber-400 mb-8 relative overflow-hidden">
+        {% comment %} Decorative Background Icon {% endcomment %}
+        <span class="absolute -right-4 -bottom-4 text-7xl opacity-10 rotate-12">⚡</span>
+
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div class="text-center md:text-left">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400 mb-1">
+                    Efficiency Rating
+                </h3>
+                <p class="text-white text-lg font-bold leading-tight">
+                    <span class="text-3xl text-amber-400">{{ on_time_logs }}</span>
+                    <span class="text-slate-500">/ {{ total_completed_task_count }}</span>
+                    Missions finished before deadline
+                </p>
+            </div>
+
+            {% comment %} Visual Gauge {% endcomment %}
+            <div class="flex items-center gap-4 bg-white/5 p-3 rounded-2xl border border-white/10 backdrop-blur-sm">
+                <div class="radial-progress text-amber-400" 
+                    style="--value:{{ efficiency_percentage|default:75 }}; --size:3.5rem; --thickness: 6px;" 
+                    role="progressbar">
+                    <span class="text-[10px] font-black text-white">{{ on_time_logs }}</span>
+                </div>
+                <div class="hidden sm:block">
+                    <p class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Speedster Status</p>
+                    <p class="text-white text-xs font-medium">Top-tier worker bee</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% comment %} Responsive Activity Log Section {% endcomment %}
+<div class="grid grid-cols-1 gap-6">
+    {% if total_completed_task_count > 0 %}
+        {% comment %} Mobile View: Stacked Cards (Hidden on Medium screens and up) {% endcomment %}
+        <div class="md:hidden space-y-4">
+            {% for log in total_completed_task_logs %}
+            <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-sm">📁</div>
+                        <h4 class="font-bold text-slate-800">{{ log.task.task_name }}</h4>
+                    </div>
+                    <span class="text-[10px] font-mono text-slate-400">{{ log.date_completed|date:"M d" }}</span>
+                </div>
+                <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-50">
+                    <span class="badge badge-sm badge-warning font-bold">{{ log.task.child_task_logs.count }} Sub-tasks</span>
+                    {% comment %} <span class="text-[10px] uppercase tracking-widest font-black text-emerald-500">Success</span> {% endcomment %}
+                    <div class="text-[1px] font-black text-emerald-500">
+
+                        {% if log.was_on_time %}
+                                <span class="badge badge-accent">On Time 🍯</span>
+                            {% else %}
+                                <span class="badge badge-ghost text-slate-400">Over-due </span>   
+                        {% endif %}
+                    </div>
+
+                     
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% comment %} Desktop View: Clean Table (Hidden on small screens) {% endcomment %}
+        <div class="hidden md:block bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+            <table class="table table-zebra w-full">
+                <thead class="bg-slate-50">
+                    <tr class="text-slate-400 uppercase text-[10px] tracking-widest border-none">
+                        <th class="p-6">Task</th>
+                        <th class="p-6 text-center">Progress Details</th>
+                        <th class="p-6 text-right">Completion Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in total_completed_task_logs %}
+                    <tr class="hover:bg-amber-50/30 transition-colors">
+                        <td class="p-7">
+                            <div class="flex items-center gap-6">
+                                {% if log.was_on_time %}
+                                     <span class="badge badge-accent">On Time 🍯</span>
+                                    {% else %}
+                                        <span class="badge badge-ghost text-slate-400">Over-due </span>
+                                    
+                                {% endif %}
+                                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg">📁</div>
+                                <div>
+                                    <div class="font-bold text-slate-800">{{ log.task.task_name }}</div>
+                                    <div class="text-[10px] text-slate-400 uppercase font-black">Main Task</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-6 text-center">
+                            <span class="badge badge-sm badge-warning">{{ log.task.child_task_logs.count }} Sub-tasks</span>
+                        </td>
+                        <td class="p-6 text-right font-mono text-xs text-slate-500">
+                            {{ log.date_completed|date:"M d, Y" }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% comment %} Empty State remains the same {% endcomment %}
+        <div class="card bg-white border-2 border-dashed border-slate-200 py-16">
+            <div class="card-body items-center text-center">
+                <div class="text-5xl mb-4 grayscale opacity-30">🍯</div>
+                <h3 class="text-xl font-bold text-slate-400 italic">No honey in the vault yet.</h3>
+                <a href="{% url 'home' %}" class="btn btn-warning btn-wide text-white font-bold mt-4">Start Buzzing</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+
+
+</div>
+{% endblock content %}
+
+

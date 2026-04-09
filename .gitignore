@@ -1,0 +1,40 @@
+
+project_outline
+
+dist/
+build/
+*.egg-info/
+
+/media/
+
+# Virtual Environments
+venv/
+env/
+.venv/
+ENV/
+
+# OS 
+.DS_Store
+Thumbs.db
+
+text
+# --- Security & Environment ---
+.env
+.venv/
+env/
+venv/
+__pycache__/
+*.py[cod]
+
+# --- Database ---
+busy_bee_project/db.sqlite3
+busy_bee_project/db.sqlite3-journal
+
+# --- Django Production Assets ---
+busy_bee_project/staticfiles/
+
+deleted.html
+
+busy_bee_project/static/styles/tailwindcss
+
+

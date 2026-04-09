@@ -1,0 +1,75 @@
+{% extends "busy/layout.html" %}
+
+{% block title %} Log Task {% endblock title %}
+
+{% block content %}
+{% comment %} Centered Card for Task Confirmation {% endcomment %}
+<div class="max-w-2xl mx-auto mt-12 px-4 pb-12">
+    <div class="card bg-white shadow-2xl border border-amber-100 overflow-hidden">
+        
+        {% comment %} Decorative Top Progress Bar {% endcomment %}
+        <div class="h-2 bg-amber-400 w-full"></div>
+        
+        <div class="card-body p-8">
+            {% comment %} Header & Icon {% endcomment %}
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+                    <span class="text-3xl">🏁</span>
+                </div>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Beesy Debrief</h2>
+                <p class="text-slate-500 mt-2">
+                    Final check for <span class="font-bold text-amber-600">"{{ task.task_name }}"</span>
+                </p>
+            </div>
+
+            {% comment %} Sub-task Checklist Section {% endcomment %}
+            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100 mb-8">
+                <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                    Micro-task Status 
+                    <span class="badge badge-sm bg-slate-200 border-none text-slate-600">
+                        {{ task.child_tasks.count }}
+                    </span>
+                </h3>
+                
+                <ul class="space-y-3">
+                    {% for mini in task.child_tasks.all %}
+                    <li class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-slate-100">
+                        {% if mini.is_completed %}
+                            <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px]">✔</div>
+                            <span class="text-sm text-slate-400 line-through">{{ mini.mini_task_name }}</span>
+                        {% else %}
+                            <div class="w-5 h-5 rounded-full border-2 border-amber-400 flex items-center justify-center animate-pulse"></div>
+                            <span class="text-sm font-bold text-slate-700">{{ mini.mini_task_name }}</span>
+                            <span class="badge badge-warning badge-xs ml-auto">PENDING</span>
+                        {% endif %}
+                    </li>
+                    {% empty %}
+                    <li class="text-center py-4 text-slate-400 text-sm italic"> Micro-Tasks for this task.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% comment %} The Confirmation Form {% endcomment %}
+            <div class="divider text-slate-300 text-[10px] uppercase font-bold tracking-widest">Confirmation</div>
+            
+            <form method="post" class="space-y-4 mt-6">
+                {% csrf_token %}
+                
+                <p class="text-center text-sm text-slate-500 mb-6 px-6">
+                    Ready to move this to your <span class="font-bold">History Archive</span>?
+                </p>
+
+                <div class="flex flex-col gap-3">
+                    <button type="submit" class="btn btn-warning btn-lg text-white font-black shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                        Yes, Finalise Task
+                    </button>
+                    
+                    <a href="{% url 'home' %}" class="btn btn-ghost btn-md text-slate-400 normal-case">
+                        Not ready yet, go back
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

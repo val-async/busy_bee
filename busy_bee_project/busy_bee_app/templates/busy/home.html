@@ -1,0 +1,78 @@
+{% extends "busy/layout.html" %}
+
+{% block title %} Home | Busy Bee {% endblock title %} 
+
+{% block content %}
+<div class="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
+    
+    {% if request.user.is_authenticated %}
+        {% comment %} Authenticated Welcome State {% endcomment %}
+        <div class="bg-white p-10 rounded-[3rem] shadow-2xl border border-amber-100 max-w-2xl w-full relative overflow-hidden">
+            {% comment %} Decorative Bee background element {% endcomment %}
+            <div class="absolute -top-10 -right-10 text-9xl opacity-5 grayscale pointer-events-none">🐝</div>
+            
+            <div class="relative z-10">
+                <div class="w-20 h-20 bg-amber-400 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg rotate-3 hover:rotate-0 transition-transform">
+                    <span class="text-3xl">🍯</span>
+                </div>
+                
+                <h1 class="text-4xl font-black text-slate-800 mb-2">
+                    Welcome back, <span class="text-amber-500">{{ request.user.username }}</span>!
+                </h1>
+                <p class="text-slate-500 mb-10 max-w-sm mx-auto">
+                    The hive is humming. Ready to check your missions and collect some more honey today?
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'view_tasks' %}" class="btn btn-warning btn-lg px-10 text-white font-black shadow-lg hover:scale-105 transition-all">
+                        Get Beesy 
+                    </a>
+                    <a href="{% url 'profile' %}" class="btn btn-ghost btn-lg text-slate-400 font-bold hover:bg-amber-50">
+                        View Stats
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        {% comment %} Guest Landing State {% endcomment %}
+        <div class="max-w-3xl">
+            <div class="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-black uppercase tracking-[0.2em] mb-6">
+                Productivity Reimagined
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-black text-slate-800 leading-tight mb-6">
+                So <span class="text-amber-400 underline decoration-8 decoration-amber-200">Beesy</span>. {% comment "" %} Busy {% endcomment %}
+            </h1>
+            
+            <p class="text-xl text-slate-500 mb-12 max-w-lg mx-auto leading-relaxed">
+                The personal assistant for worker bees. Organise your tasks, manage sub-missions, and watch your hive thrive.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="{% url 'register' %}" class="btn btn-warning btn-lg px-12 text-white font-black shadow-xl hover:scale-105 transition-all">
+                    Get Started {% comment "" %} Start Your Hive {% endcomment %}
+                </a>
+                <div class="flex items-center gap-2 text-slate-400">
+                    <span>Already beesy?</span>
+                    <a href="{% url 'login' %}" class="font-bold text-amber-600 hover:underline">Login</a>
+                </div>
+            </div>
+
+            {% comment %} Feature Pills {% endcomment %}
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-3 gap-4 opacity-60">
+                <div class="flex items-center gap-2 font-bold text-slate-400 text-sm">
+                    <span class="text-amber-400">✔</span> Stay Busy {% comment "" %} HTMX Powered{% endcomment %}
+                </div>
+                <div class="flex items-center gap-2 font-bold text-slate-400 text-sm">
+                    <span class="text-amber-400">✔</span> Task Logs
+                </div>
+                <div class="flex items-center gap-2 font-bold text-slate-400 text-sm">
+                    <span class="text-amber-400">✔</span> Sub-Missions
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock content %}
