@@ -1,4 +1,4 @@
-static/js/htmx.min.js linguist-vendored
+static/js/htmx.min.js linguist-detectable=false
 static/styles/daisyui.mjs linguist-detectable=false
 static/styles/output.css linguist-generated
 **/templates/** linguist-detectable=false
