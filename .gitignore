@@ -27,14 +27,14 @@ __pycache__/
 *.py[cod]
 
 # --- Database ---
-busy_bee_project/db.sqlite3
-busy_bee_project/db.sqlite3-journal
+db.sqlite3
+db.sqlite3-journal
 
 # --- Django Production Assets ---
-busy_bee_project/staticfiles/
+/staticfiles/
 
 deleted.html
 
-busy_bee_project/static/styles/tailwindcss
-
+/static/styles/tailwindcss
+/static/styles/output.css
 
