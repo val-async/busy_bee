@@ -1,7 +1,7 @@
 static/js/htmx.min.js linguist-vendored
-static/styles/daisyui.mjs linguist-vendored
+static/styles/daisyui.mjs linguist-detectable=false
 static/styles/output.css linguist-generated
-*.html linguist-language=django
+**/templates/** linguist-detectable=false
 
 staticfiles/** linguist-vendored
 staticfiles/**/*.js linguist-vendored
